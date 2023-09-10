@@ -62,14 +62,42 @@
 18. Menghubungkan Repositori Lokal dengan Repositori di GitHub
     ```bash
     git init
+    git add .
     git commit -m "first commit"
     git branch -M main
     git remote add origin https://github.com/RobertBenyamin/DekatriaMart-Warehouse.git
     git push -u origin main
     ```
+19. Mendeploy proyek ke Adaptable
 
 ## Bagan _Request Client_
+<img src="static/images/django_request.png" alt="Bagan" width="400" height="300"> <br>
+1. Django menerima `HTTP Request`. Jika `HTTP Request` yang diterima sesuai dengan URL tertentu yang terdapat pada `urls.py`, maka `view function` (views.py) terkait akan dipanggil dan meneruskan permintaan tersebut.
+2. `View` akan memproses permintaan sesuai dengan logika yang telah definisikan. Ini bisa mencakup mengambil data dari basis data (`models.py`), render template (`templates`), atau berbagai tindakan lainnya yang sesuai dengan kebutuhan aplikasi.
+3. Setelah pemrosesan permintaan selesai, `view` akan mengembalikan sebuah respon. Respon ini bisa berupa halaman HTML, data JSON, atau tipe respon lainnya sesuai dengan jenis permintaan yang dibuat oleh client. Respon ini akan ditampilkan pada browser pengguna.
 
-## Penjelasan _Virtual Environment_
+<small>
+Sumber: <br>  
+https://www.w3schools.com/django/django_intro.php <br>
+https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Introduction
+</small>
+
+## Penjelasan Virtual Environment
+Virtual environment adalah alat yang membantu menjaga dependencies yang diperlukan oleh berbagai proyek terpisah satu sama lainnya dengan membuat lingkungan virtual yang terisolasi bagi setiap proyek.
+
+Terdapat beberapa manfaat yang bisa kita dapatkan dengan menggunakan virtual environment, diantaranya adalah:
+- Environment yang stabil: <br>
+Virtual environment memungkinkan kita untuk membuat proyek dengan lingkungan yang terisolasi, sehingga tidak akan mengganggu sistem Python secara global atau lingkungan virtual lainnya. Ini berarti bahwa perubahan pada sistem atau proyek lain tidak akan mempengaruhi stabilitas proyek kita dan begitu pula sebaliknya.
+- Environment yang dapat direproduksi: <br> 
+Kita dapat membuat daftar dependencies dan sub-dependencies dalam sebuah file, untuk proyek kita, yang memudahkan kita ataupun orang lain untuk mereplikasi dan menginstal semua dependencies yang digunakan dalam lingkungan kita pada sistem yang berbeda. Sehingga, dapat dipastikan bahwa proyek kita tetap berjalan secara konsisten terlepas dari lingkungan tempat proyek tersebut dijalankan.
+
+Kita tetap dapat mengembangkan aplikasi tanpa menggunakan virtual environment, tetapi hal tersebut sangat tidak disarankan karena terdapat resiko terjadinya konflik versi dependencies. 
+
+<small>
+Sumber: <br>  
+https://www.geeksforgeeks.org/python-virtual-environment/ <br>
+https://www.freecodecamp.org/news/how-to-setup-virtual-environments-in-python/ <br>
+https://ngangasn.com/is-virtualenv-venv-necessary-for-django/
+</small>
 
 ## MVC, MVT, dan MVVM
