@@ -148,6 +148,7 @@ Umum digunakan dalam pengembangan aplikasi desktop, aplikasi web tradisional. | 
 2. [Perbedaan antara form POST dan form GET dalam Django](#perbedaan-antara-form-post-dan-form-get-dalam-django)
 3. [Perbedaan Utama antara XML, JSON, dan HTML dalam Konteks Pengiriman Data](#perbedaan-utama-antara-xml-json-dan-html-dalam-konteks-pengiriman-data)
 4. [Alasan JSON sering Digunakan dalam Pertukaran Data antara Aplikasi Web Modern](#alasan-json-sering-digunakan-dalam-pertukaran-data-antara-aplikasi-web-modern)
+5. [Screenshot Postman](#screenshot-postman)
 
 ## Proses Pengerjaan Tugas
 
@@ -250,5 +251,17 @@ https://www.guru99.com/json-vs-xml-difference.html
 Sumber: <br>  
 https://www.linkedin.com/advice/3/what-benefits-drawbacks-using-json-data
 </small>
+
+## Screenshot Postman
+- HTML Response
+    ![html](static/images/HTMLResponse.jpg)
+- JSON Response
+    ![json](static/images/JSONResponse.jpg)
+- JSON Response by ID
+    ![jsonID](static/images/JSONResponseByID.jpg)
+- XML Response
+    ![xml](static/images/XMLResponse.jpg)
+- XML Response by ID
+    ![xmlID](static/images/XMLResponseByID.jpg)
 
 </details>
