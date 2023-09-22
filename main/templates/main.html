@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Dekatria Mart Warehouse</h1>
+<h1>Selamat Datang, {{user.name}}</h1>
+<h2>Dekatria Mart Warehouse: {{user.warehouse_location}}</h2>
 <hr>
-<h2>List of products</h2>
-<h3>Kamu menyimpan {{items.count}} item pada aplikasi ini</h3>
+<h3>List of products</h3>
+<h4>Kamu menyimpan {{items.count}} item pada aplikasi ini</h>
 <table class="table-custom">
     <tr>
         <th>Name</th>
@@ -25,9 +26,16 @@
 
 <br />
 
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+
 <a href="{% url 'main:create_item' %}">
     <button>
         Add New Item
+    </button>
+</a>
+<a href="{% url 'main:logout' %}">
+    <button>
+        Logout
     </button>
 </a>
 
