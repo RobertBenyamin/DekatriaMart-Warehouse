@@ -12,14 +12,34 @@
         <th>Amount</th>
         <th>Description</th>
         <th>Price</th>
+        <th>Delete</th> 
     </tr>
 
     {% for item in items %}
         <tr>
             <td>{{item.name}}</td>
-            <td>{{item.amount}}</td>
+            <td style="text-align: center;">
+                <a href="{% url 'main:decrease_amount' item.id %}" style="text-decoration: none;">
+                    <button>
+                        -
+                    </button>
+                </a>
+                {{item.amount}}
+                <a href="{% url 'main:increase_amount' item.id %}" style="text-decoration: none;">
+                    <button>
+                        +
+                    </button>
+                </a>
+            </td>
             <td>{{item.description}}</td>
             <td>{{item.price}}</td>
+            <td style="text-align: center;">
+                <a href="{% url 'main:delete_item' item.id %}" style="text-decoration: none;">
+                    <button>
+                        <i class="material-icons" style="color: red;">delete</i>
+                    </button>
+                </a>
+            </td>
         </tr>
     {% endfor %}
 </table>
@@ -28,12 +48,12 @@
 
 <h5>Sesi terakhir login: {{ last_login }}</h5>
 
-<a href="{% url 'main:create_item' %}">
+<a href="{% url 'main:create_item' %}" style="text-decoration: none;">
     <button>
         Add New Item
     </button>
 </a>
-<a href="{% url 'main:logout' %}">
+<a href="{% url 'main:logout' %}" style="text-decoration: none;">
     <button>
         Logout
     </button>

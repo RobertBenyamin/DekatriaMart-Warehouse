@@ -67,6 +67,30 @@ def create_item(request):
     context = {'form': form}
     return render(request, "create_item.html", context)
 
+@login_required(login_url='/login')
+def delete_item(request, item_id):
+    item = Item.objects.get(pk=item_id)
+
+    if request.method == 'POST':
+        item.delete()
+        return HttpResponseRedirect(reverse('main:home'))
+    
+    context = {'item': item}
+    return render(request, "delete_item.html", context)
+
+def increase_amount(request, item_id):
+    item = Item.objects.get(pk=item_id)
+    item.amount += 1
+    item.save()
+    return HttpResponseRedirect(reverse('main:home'))
+
+def decrease_amount(request, item_id):
+    item = Item.objects.get(pk=item_id)
+    if item.amount > 0:
+        item.amount -= 1
+        item.save()
+    return HttpResponseRedirect(reverse('main:home'))
+
 def show_xml(request):
     data = Item.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
