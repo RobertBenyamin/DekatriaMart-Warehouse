@@ -272,7 +272,134 @@ https://www.linkedin.com/advice/3/what-benefits-drawbacks-using-json-data
 ## Daftar Isi
 
 1. [Proses Pengerjaan Tugas](#proses-pengerjaan-tugas-2)
+2. [Pengertian, Kelebihan, dan Kekurangan Django UserCreationForm](#pengertian-kelebihan-dan-kekurangan-django-usercreationform)
+3. [Perbedaan antara Autentikasi dan Otorisasi dalam Konteks Django](#perbedaan-antara-autentikasi-dan-otorisasi-dalam-konteks-django)
+4. [Pengertian *Cookies* dalam Konteks Aplikasi Web dan Implementasinya pada Django](#pengertian-cookies-dalam-konteks-aplikasi-web-dan-implementasinya-pada-django)
+5. [Risiko Penggunaan *Cookies* secara Default dalam Pengembangan Web](#risiko-penggunaan-cookies-secara-default-dalam-pengembangan-web)
 
 ## Proses Pengerjaan Tugas
+
+1. Membuat kustomisasi model `User` pada `models.py`
+    ```python
+    ...
+    from django.contrib.auth.models import AbstractUser
+
+    class User(AbstractUser):
+        ...
+    ```
+2. Menghubungkan model `User` dengan model `Item`
+    ```python
+    class Item(models.Model):
+        user = models.ForeignKey(User, on_delete=models.CASCADE)
+        ...
+    ```
+3. Membuat form registrasi user pada `forms.py`
+    ```python
+    ...
+    from django.contrib.auth.forms import UserCreationForm
+
+    class UserRegisterForm(UserCreationForm):
+        class Meta:
+            model = User
+            fields = ["name", "username", "email", "warehouse_location"]
+    ...
+    ```
+4. Membuat fungsi `register`, `login_user`, dan `logout_user` pada `views.py`
+5. Menambahkan *path url* dari semua fungsi yang baru ditambahkan ke dalam `urlpatterns` pada `urls.py` yang ada pada direktori `main`
+6. Membuat berkas `register.html` pada subdirektori `templates` yang ada pada direktori `main` dan mengisinya dengan kode untuk registrasi user
+7. Membuat berkas `login.html` pada subdirektori `templates` yang ada pada direktori `main` dan mengisinya dengan kode untuk login user
+8. Menggunakan data dari *cookies* untuk mengimpelemntasikan `last login`
+9. Update `main.html` yang ada pada subdirektori `templates` yang ada pada direktori `main` agar dapat menampilkan informasi `last login`
+10. Update fungsi `home`, `login_user`, dan `logout_user` pada `views.py` agar dapat menampilkan informasi `last login`
+11. Menambahkan tombol menambahkan dan mengurangi `item amount` serta tombol menghapus `item` pada berkas `main.html`
+12. Membuat berkas `delete_item.html` pada subdirektori `templates` yang ada pada direktori `main` dan mengisinya dengan kode untuk konfirmasi penghapusan `item`
+13. Membuat fungsi `increase_amount`, `decrease_amount`, dan `delete_item` pada `views.py`
+14. Menambahkan *path url* dari semua fungsi yang baru ditambahkan ke dalam `urlpatterns` pada `urls.py` yang ada pada direktori `main`
+15. Merestriksi akses ke halaman `home`, `create_item`, dan `delete_item` dengan menambahkan kode berikut pada `views.py` di atas fungsi-fungsi tersebut.
+    ```python
+    ...
+    from django.contrib.auth.decorators import login_required
+
+    @login_required(login_url='/login')
+    def home(request):
+        ...
+    ...
+    ```
+
+## Pengertian, Kelebihan, dan Kekurangan Django UserCreationForm
+
+Django UserCreationForm adalah sebuah *built-in function* yang disediakan oleh Django. Form ini berfungsi untuk mendaftarkan user baru. Untuk menggunakan UserCreationForm, kita perlu mengimpornya dari django.contrib.auth.forms.
+```python
+from django.contrib.auth.forms import UserCreationForm  
+```
+
+Kelebihan:  
+1. Mudah digunakan  
+2. Menyediakan *field* bawaan  
+3. Sudah termasuk kode html untuk menampilkannya di *front-end*  
+4. Terintegrasi dengan sistem autentikasi Django  
+
+Kekurangan:  
+1. Fitur terbatas  
+2. Memerlukan usaha ekstra untuk mengkustomisasi tampilan form  
+
+<small>
+Sumber: <br>
+https://www.doprax.com/tutorial/django-tutorial-for-beginners-step-by-step-part-8-user-authentication-django/ <br>
+https://www.javatpoint.com/django-usercreationform
+</small>
+
+## Perbedaan antara Autentikasi dan Otorisasi dalam Konteks Django
+
+Autentikasi adalah proses memverifikasi identitas pengguna, yaitu memastikan bahwa pengguna yang mencoba mengakses sistem sesuai dengan identitas yang diberikan. 
+Contoh: seorang pengguna diwajibkan untuk memasukkan username dan password untuk bisa mengakses web.
+
+Otorisasi adalah proses menentukan apa yang pengguna terautentikasi boleh dan tidak boleh lakukan.
+Contoh: seorang dengan role dosen dapat menambahkan mata kuliah, namun role mahasiswa tidak.
+
+Kedua fitur tersebut sangat penting untuk memastikan keamanan sistem. Autentikasi dan otorisasi memastikan bahwa hanya pengguna yang berhak saja yang dapat mengakses fitur atau data tertentu.
+
+<small>
+Sumber: <br>
+https://docs.djangoproject.com/en/4.2/topics/auth/
+</small>
+
+## Pengertian *Cookies* dalam Konteks Aplikasi Web dan  untuk mengimpelemntasikan `last login`
+
+*Cookie* adalah file kecil yang disimpan di komputer pengguna. *Cookie* digunakan untuk menyimpan sejumlah data mengenai interaksi pengguna dengan website tertentu yang kemudian dapat diakses oleh server web atau komputer pengguna. *Cookie* dapat berisi semua jenis informasi seperti waktu terakhir mengunjungi situs web, item yang ditambahkan ke dalam keranjang belanja, preferensi bahasa, dan lain-lain.
+
+Salah satu kegunaan pada Django adalah untuk mengelola data sesi pengguna. Sesi adalah cara untuk menyimpan informasi tentang pengguna di sisi server. Informasi tersebut kemudian akan digunakan dalam permintaan berikutnya. Django menggunakan *cookie* yang disebut `session id` untuk menyimpan *identifier* unik untuk setiap sesi pengguna. *Identifier* ini digunakan untuk mengambil data sesi pengguna dari basis data Django.
+
+1. Saat pengguna login, sebuah sesi dibuat dengan ID sesi yang unik (session ID). ID sesi akan dikirim ke browser pengguna.
+2. Server kemudian akan membuat variabel sesi `auth_user` dan menyimpan di dalamnya informasi dari pengguna yang login. Data sesi akan disimpan dalam sebuah file di sisi server. Nama file tersebut adalah `session ID`.
+3. Ketika pengguna meminta halaman dashboard, browser akan mengirimkan *cookie* yang berisi ID sesi bersamaan dengan permintaan tersebut.
+4. Server menerima permintaan yang masuk, mengambil ID sesi, dan mencari sesi terkait. Setelah sesi ditemukan, server akan mengambil data.
+5. Terakhir, server perlu memeriksa keberadaan variabel sesi `auth_user` tersebut. Jika ditemukan, server akan memberikan akses ke halaman dashboard.
+
+<small>
+Sumber: <br>
+https://www.geeksforgeeks.org/cookies-used-website/ <br>
+https://medium.com/@hendelRamzy/how-session-and-cookies-works-640fb3f349d1
+</small>
+
+## Risiko Penggunaan *Cookies* secara Default dalam Pengembangan Web
+
+Meskipun *cookie* memiliki banyak kegunaan, *cookies* memiliki banyak risiko yang harus diwaspadai.
+1. Cross-Site Request Forgery (CSRF): CSRF adalah serangan di mana penyerang memaksa pengguna yang terautentikasi untuk melakukan tindakan yang tidak diinginkan tanpa sepengetahuan mereka. *Cookies* dapat digunakan dalam serangan ini untuk menyampaikan permintaan palsu ke server dengan otentikasi pengguna yang sah.
+2. Session Fixation:  Pada jenis serangan ini, penyerang mencoba memanipulasi atau menetapkan ID sesi pengguna sehingga pengguna nantinya akan menggunakan sesi yang telah dimanipulasi tersebut. Dengan menggunakan metode ini, penyerang dapat membuat pengguna untuk login sebagai penyerang pada berbagai tingkat aplikasi.
+3. Cross-Site Scripting (XSS): XSS adalah serangan di mana penyerang memasukkan script berbahaya ke dalam situs web. Pengguna yang mengakses web tersebut kemudian akan menerima dan menjalankan script berbahaya yang telah ditanam. Script berbahaya tersebut kemudian dapat mengakses *cookie*, ID sesi, atau informasi sensitif lainnya yang disimpan oleh browser dan digunakan pada web tersebut.
+4. dll
+
+Beberapa hal yang dapat dilakukan untuk mencegah risiko tersebut adalah:
+1. Hapus *Cookie* Secara Berkala: Menghapus *cookie* secara berkala dapat membantu mengurangi jumlah informasi pribadi yang disimpan dan dibagikan oleh situs web.
+2. Gunakan koneksi yang aman: Jika memungkinkan, pengguna harus selalu menggunakan koneksi aman (HTTPS) untuk mengakses situs web, karena hal ini membantu melindungi informasi *cookie* agar tidak disadap oleh penyerang.
+3. Mengatur Pengaturan Privasi: Mengatur pengaturan privasi di browser dapat membantu mengontrol jenis *cookie* yang disimpan dan jumlah informasi yang dibagikan. Pengguna juga dapat memilih untuk memblokir *cookie* pihak ketiga, yang sering digunakan untuk pelacakan.
+4. dll
+
+<small>
+Sumber: <br>
+https://resources.infosecinstitute.com/topics/general-security/risk-associated-cookies/ <br>
+https://www.linkedin.com/pulse/consider-next-time-you-accept-browser-cookie-best-practices-pratt
+</small>
 
 </details>
