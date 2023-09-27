@@ -1,33 +1,61 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Dekatria Mart Warehouse</h1>
+<h1>Selamat Datang, {{user.name}}</h1>
+<h2>Dekatria Mart Warehouse: {{user.warehouse_location}}</h2>
 <hr>
-<h2>List of products</h2>
-<h3>Kamu menyimpan {{items.count}} item pada aplikasi ini</h3>
+<h3>List of products</h3>
+<h4>Kamu menyimpan {{items.count}} item pada aplikasi ini</h>
 <table class="table-custom">
     <tr>
         <th>Name</th>
         <th>Amount</th>
         <th>Description</th>
         <th>Price</th>
+        <th>Delete</th> 
     </tr>
 
     {% for item in items %}
         <tr>
             <td>{{item.name}}</td>
-            <td>{{item.amount}}</td>
+            <td style="text-align: center;">
+                <a href="{% url 'main:decrease_amount' item.id %}" style="text-decoration: none;">
+                    <button>
+                        -
+                    </button>
+                </a>
+                {{item.amount}}
+                <a href="{% url 'main:increase_amount' item.id %}" style="text-decoration: none;">
+                    <button>
+                        +
+                    </button>
+                </a>
+            </td>
             <td>{{item.description}}</td>
             <td>{{item.price}}</td>
+            <td style="text-align: center;">
+                <a href="{% url 'main:delete_item' item.id %}" style="text-decoration: none;">
+                    <button>
+                        <i class="material-icons" style="color: red;">delete</i>
+                    </button>
+                </a>
+            </td>
         </tr>
     {% endfor %}
 </table>
 
 <br />
 
-<a href="{% url 'main:create_item' %}">
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+
+<a href="{% url 'main:create_item' %}" style="text-decoration: none;">
     <button>
         Add New Item
+    </button>
+</a>
+<a href="{% url 'main:logout' %}" style="text-decoration: none;">
+    <button>
+        Logout
     </button>
 </a>
 
