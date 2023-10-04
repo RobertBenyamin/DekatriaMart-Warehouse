@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
+from main.forms import ItemForm, UserRegisterForm
 from main.forms import ItemForm, UserRegisterForm
 from django.urls import reverse
 from main.models import Item
@@ -8,19 +10,61 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+import datetime
 
 @login_required(login_url='/login')
+@login_required(login_url='/login')
 def home(request):
+    items = Item.objects.filter(user=request.user)
     items = Item.objects.filter(user=request.user)
 
     context = {
         'user': request.user,
+        'user': request.user,
         'items': items,
+        'last_login': request.COOKIES['last_login'],
         'last_login': request.COOKIES['last_login'],
     }
 
     return render(request, "main.html", context)
 
+def register(request):
+    form = UserRegisterForm()
+
+    if request.method == "POST":
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:home")) 
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+        else:
+            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
+    context = {}
+    return render(request, 'login.html', context)
+
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+
+@login_required(login_url='/login')
 def register(request):
     form = UserRegisterForm()
 
@@ -62,10 +106,26 @@ def create_item(request):
         item = form.save(commit=False)
         item.user = request.user
         item.save()
+        item = form.save(commit=False)
+        item.user = request.user
+        item.save()
         return HttpResponseRedirect(reverse('main:home'))
 
     context = {'form': form}
     return render(request, "create_item.html", context)
+
+@login_required(login_url='/login')
+def edit_item(request, item_id):
+    item = Item.objects.get(pk=item_id)
+
+    form = ItemForm(request.POST or None, instance=item)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:home'))
+
+    context = {'form': form}
+    return render(request, "edit_item.html", context)
 
 @login_required(login_url='/login')
 def delete_item(request, item_id):
