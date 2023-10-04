@@ -1,62 +1,83 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Selamat Datang, {{user.name}}</h1>
-<h2>Dekatria Mart Warehouse: {{user.warehouse_location}}</h2>
-<hr>
-<h3>List of products</h3>
-<h4>Kamu menyimpan {{items.count}} item pada aplikasi ini</h>
-<table class="table-custom">
-    <tr>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Delete</th> 
-    </tr>
+<nav class="bg-gray-800 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <a class="text-2xl font-semibold" href="#">Dekatria Mart Warehouse</a>
+        <form class="mr-4 flex items-center">
+            <input class="px-3 py-2 bg-gray-900 text-white focus:outline-none rounded-l-lg" type="search" placeholder="Search" aria-label="Search">
+            <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-r-lg" type="submit">Search</button>
+        </form>
+        <span class="mr-4">Sesi terakhir login: {{ last_login }}</span>
+        <div class="relative group">
+            <button class="text-lg font-semibold text-white flex items-center focus:outline-none group-hover:text-blue-500" id="userMenuButton">
+                Welcome, {{user.name}} 
+                <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+            <div class="opacity-0 invisible transition-opacity duration-300 transform translate-y-2 absolute right-0 bg-white border rounded-lg w-48 py-2 z-10" id="userMenu">
+                <ul>
+                    <li><a class="block px-4 py-2 hover:bg-gray-200 text-black" href="#">Profile</a></li>
+                    <li><a class="block px-4 py-2 hover:bg-gray-200 text-red-700" href="{% url 'main:logout' %}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
 
-    {% for item in items %}
-        <tr>
-            <td>{{item.name}}</td>
-            <td style="text-align: center;">
-                <a href="{% url 'main:decrease_amount' item.id %}" style="text-decoration: none;">
-                    <button>
-                        -
-                    </button>
-                </a>
-                {{item.amount}}
-                <a href="{% url 'main:increase_amount' item.id %}" style="text-decoration: none;">
-                    <button>
-                        +
-                    </button>
-                </a>
-            </td>
-            <td>{{item.description}}</td>
-            <td>{{item.price}}</td>
-            <td style="text-align: center;">
-                <a href="{% url 'main:delete_item' item.id %}" style="text-decoration: none;">
-                    <button>
-                        <i class="material-icons" style="color: red;">delete</i>
-                    </button>
-                </a>
-            </td>
-        </tr>
-    {% endfor %}
-</table>
+<div class="container mx-auto mt-8 px-4">
+    <h1 class="text-3xl font-semibold mb-4">List of Products</h1>
+    <h4 class="text-xl font-semibold mb-4">Kamu menyimpan {{items.count}} item pada aplikasi ini</h4>
+    
+    <table class="w-full border-collapse border border-gray-300" style="table-layout: fixed;">
+        <thead>
+            <tr class="bg-gray-800">
+                <th class="p-2 text-white">Name</th>
+                <th class="p-2 text-white">Amount</th>
+                <th class="p-2 text-white">Description</th>
+                <th class="p-2 text-white">Price</th>
+                <th class="p-2 text-white">Edit Product</th>
+                <th class="p-2 text-white">Delete Product</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr class="{% if forloop.last %}bg-[#F98948] {% else %}hover:bg-gray-100{% endif %}">
+                    <td class="p-2">{{item.name}}</td>
+                    <td class="p-2 flex items-center justify-center">
+                        <a href="{% url 'main:decrease_amount' item.id %}" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded-l-full">-</a>
+                        <div class="px-2 w-auto">
+                            <p>{{item.amount}}</p>
+                        </div>
+                        <a href="{% url 'main:increase_amount' item.id %}" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded-r-full">+</a>
+                    </td>
+                    <td class="p-2">{{item.description}}</td>
+                    <td class="p-2 text-center">{{item.price}}</td>
+                    <td class="p-2 text-center">
+                        <a href="{% url 'main:edit_item' item.id %}" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded-full">Edit</a>
+                    </td>
+                    <td class="p-2 text-center">
+                        <a href="{% url 'main:delete_item' item.id %}" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-2 rounded-full">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
 
-<br />
+    <div class="container mx-auto mt-8 flex justify-end">
+        <a href="{% url 'main:create_item' %}" class="bg-green-600 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-full inline-block mr-16">Add New Item</a>
+    </div>
+</div>
 
-<h5>Sesi terakhir login: {{ last_login }}</h5>
-
-<a href="{% url 'main:create_item' %}" style="text-decoration: none;">
-    <button>
-        Add New Item
-    </button>
-</a>
-<a href="{% url 'main:logout' %}" style="text-decoration: none;">
-    <button>
-        Logout
-    </button>
-</a>
+<style>
+    #userMenuButton:hover + #userMenu,
+    #userMenu:hover {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(0, 0);
+    }
+</style>
 
 {% endblock content %}

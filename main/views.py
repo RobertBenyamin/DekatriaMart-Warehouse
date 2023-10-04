@@ -68,6 +68,19 @@ def create_item(request):
     return render(request, "create_item.html", context)
 
 @login_required(login_url='/login')
+def edit_item(request, item_id):
+    item = Item.objects.get(pk=item_id)
+
+    form = ItemForm(request.POST or None, instance=item)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:home'))
+
+    context = {'form': form}
+    return render(request, "edit_item.html", context)
+
+@login_required(login_url='/login')
 def delete_item(request, item_id):
     item = Item.objects.get(pk=item_id)
 

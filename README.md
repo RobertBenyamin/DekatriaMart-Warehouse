@@ -403,3 +403,134 @@ https://www.linkedin.com/pulse/consider-next-time-you-accept-browser-cookie-best
 </small>
 
 </details>
+
+<details>
+<summary>Tugas 5</summary>
+
+## Daftar Isi
+
+1. [Proses Pengerjaan Tugas](#proses-pengerjaan-tugas-3)
+2. [Manfaat dari Setiap *Element Selector* dan Waktu yang Tepat untuk Menggunakannya](#manfaat-dari-setiap-element-selector-dan-waktu-yang-tepat-untuk-menggunakannya)
+3. [Penjelasan HTML5 Tag](#penjelasan-html5-tag)
+4. [Perbedaan antara *Margin* dan *Padding*](#perbedaan-antara-margin-dan-padding)
+5. [Perbedaan antara Framework CSS Tailwind dan Bootstrap](#perbedaan-antara-framework-css-tailwind-dan-bootstrap)
+
+## Proses Pengerjaan Tugas  
+
+1. Membuat fungsi `edit_item` pada `views.py`
+2. Menambahkan *path url* fungsi yang baru ditambahkan ke dalam `urlpatterns` pada `urls.py` yang ada pada direktori `main`
+3. Membuat berkas `edit_item.html` pada subdirektori `templates` yang ada pada direktori `main` dan mengisinya dengan kode untuk edit item yang telah dibuat
+4. Menambahkan kode di bawah ke `base.html` yang ada pada direktori `templates` untuk menambahkan Tailwind CSS ke aplikasi
+    ```html
+    <head>
+        ...
+        <script src="https://cdn.tailwindcss.com"></script>
+        ...
+    </head>
+    ```
+5. Mengkustomisasi tampilan semua halaman yang ada pada aplikasi menggunakan Tailwind CSS
+6. Memberikan warna background yang berbeda pada baris terakhir dari daftar item pada inventori
+
+## Manfaat dari Setiap *Element Selector* dan Waktu yang Tepat untuk Menggunakannya  
+
+1. Universal Selector  
+Universal selector memungkinkan kita memberikan style ke semua elemen HTML. Universal selector digunakan ketika kita ingin memberikan style yang sama untuk semua elemen HTML.
+    ```css
+    * {
+    text-align: center;
+    color: blue;
+    }
+    ```
+
+2. Element Selector  
+Element selector memungkinkan kita memberikan style ke semua elemen yang memiliki tag HTML yang sama. Element selector digunakan ketika kita ingin memberikan style yang sama untuk semua elemen dengan tag yang sama.
+    ```css
+    p {
+    text-align: center;
+    color: red;
+    }
+    ```
+    ```html
+    <p>Hello World!</p>
+    ```
+
+3. Class Selector  
+Class selector memungkinkan kita memberikan style ke semua elemen HTML yang memiliki nilai atribut class yang sama. Class selector digunakan ketika kita ingin mengelompokkan beberapa tag menjadi memiliki style yang sama.
+    ```css
+    .center {
+    text-align: center;
+    color: red;
+    }
+    ```
+    ```html
+    <p class="center">Hello World!</p>
+    ```
+
+4. ID Selector  
+ID selector memungkinkan kita memberikan style ke suatu elemen HTML yang memiliki ID yang unik. ID selector digunakan ketika kita ingin memberikan style yang unik untuk suatu elemen tertentu.
+    ```css
+    #p1 {
+    text-align: center;
+    color: red;
+    }
+    ```
+    ```html
+    <p id="p1">Hello World!</p>
+    ```
+
+<small>
+Sumber: <br>
+https://www.w3schools.com/css/css_selectors.asp <br>
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selectors_and_combinators
+</small>
+
+## Penjelasan HTML5 Tag  
+
+- `<header>`: Mengelompokkan elemen-elemen yang terletak di bagian atas dokumen HTML, seperti judul halaman, logo, atau navigasi situs.
+- `<footer>`: Menandai bagian bawah dari sebuah elemen, seperti hak cipta atau informasi kontak.
+- `<nav>`: Menandai bagian navigasi dalam halaman web.
+- `<section>`: Mengelompokkan konten berdasarkan tema atau topik tertentu.
+- `<details>`: Menampilkan informasi tambahan yang dapat diperluas atau dilipat.
+- `<article>`: Mengelompokkan konten yang dapat berdiri sendiri, seperti artikel berita atau posting blog.
+- `<audio>`: Menyisipkan audio, seperti musik atau efek suara, di dalam halaman web.
+- `<video>`: Menyisipkan video di dalam halaman web.
+- `<canvas>`: Membuat grafik dan animasi interaktif menggunakan JavaScript.
+- `<time>`: Menandai informasi waktu atau tanggal dalam berbagai format.
+- dll
+
+<small>
+Sumber: <br>
+https://www.tutorialspoint.com/html5/html5_tags.htm
+</small>
+
+## Perbedaan antara *Margin* dan *Padding*  
+
+Dalam CSS, margin adalah ruang di sekitar border elemen, sedangkan padding adalah ruang di antara border elemen dan konten elemen. Dengan kata lain, properti margin mengontrol ruang di luar elemen, dan properti padding mengontrol ruang di dalam elemen.
+
+<div style="text-align:center;">
+  <img src="static/images/margin_padding.webp" alt="Margin and Padding" width="50%">
+</div>
+
+<small>
+Sumber: <br>
+https://blog.hubspot.com/website/css-margin-vs-padding
+</small>
+
+## Perbedaan antara Framework CSS Tailwind dan Bootstrap  
+
+|                      | Tailwind CSS                               | Bootstrap                                   |
+|----------------------|--------------------------------------------|---------------------------------------------|
+| **Pengertian** | Framework CSS yang berfokus pada utilitas, memberikan banyak class utilitas untuk membangun desain dengan cepat. | Framework CSS yang menyediakan komponen siap pakai dan gaya desain yang telah ditentukan. |
+| **Ukuran File CSS** | Ringan jika menggunakan sedikit class utilitas, tetapi dapat menjadi besar jika menggunakan banyak class utilitas. | Lebih besar karena otomatis menyertakan semua komponen siap pakai dan gaya desain yang lebih lengkap. |
+| **Desain** | Lebih fleksibel dan memungkinkan desain yang mudah dikustomisasi. | Lebih terstruktur dan konsisten dengan gaya desain yang telah ditetapkan. |
+| **Komponen Siap Pakai** | Tidak menyediakan komponen siap pakai, memerlukan desain dari awal. | Menyediakan banyak komponen siap pakai seperti navbar, card, dan lainnya, sehingga mempercepat pengembangan web. |
+| **Kustomisasi** | Memerlukan pemrograman lebih lanjut untuk mengkustomisasi desain. | Dapat disesuaikan dengan mengganti variabel CSS atau mengedit kode sumber. |
+| **Kapan Menggunakan** | Cocok digunakan jika ingin membangun web dengan desain yang sangat terkustomisasi, memiliki kontrol penuh atas komponen, dan menghindari *bloat* CSS. | Cocok digunakan jika ingin membangun web dengan cepat menggunakan komponen siap pakai dan tidak perlu desain yang sangat terkustomisasi. |
+
+<small>
+Sumber: <br>
+https://codepolitan.com/blog/perbedaan-bootstrap-dan-tailwind <br>
+https://www.tutorialspoint.com/tailwind-css-vs-bootstrap
+</small>
+
+</details>
