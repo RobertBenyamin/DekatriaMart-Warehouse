@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from main.views import home, show_xml, show_json, show_xml_by_id, show_json_by_id 
 from main.views import register, login_user, logout_user, increase_amount, decrease_amount
-from main.views import create_item, edit_item, delete_item
+from main.views import create_item, edit_item, delete_item, get_item_json
 
 app_name = 'main'
 
@@ -12,6 +12,7 @@ urlpatterns = [
     path('create-item', create_item, name='create_item'),
     path('edit-item/<int:item_id>/', edit_item, name='edit_item'),
     path('delete-item/<int:item_id>/', delete_item, name='delete_item'),
+    path('get-item/', get_item_json, name='get_item_json'),
 
     path('register/', register, name='register'),
     path('login/', login_user, name='login'),
