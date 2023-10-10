@@ -94,10 +94,7 @@ def delete_item(request, item_id):
 
     if request.method == 'POST':
         item.delete()
-        return HttpResponseRedirect(reverse('main:home'))
-    
-    context = {'item': item}
-    return render(request, "delete_item.html", context)
+        return JsonResponse({'success': True,})
 
 def increase_amount(request, item_id):
     item = Item.objects.get(pk=item_id)

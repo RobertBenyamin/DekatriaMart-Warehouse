@@ -104,6 +104,38 @@
             {% endfor %}
         </tbody>
     </table> -->
+    
+    <div
+        id="deleteConfirmation"
+        class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100"
+    >
+        <div class="bg-white p-8 rounded shadow-lg w-full">
+            <h1 class="text-2xl font-semibold text-center mb-6">
+                Confirm Deletion
+            </h1>
+
+            <form id="deleteItemForm" method="POST" action="">
+                {% csrf_token %}
+                <p id="deleteConfirmationText" class="mb-4"></p>
+
+                <div class="text-center">
+                    <button
+                        type="button"
+                        onclick="closeDeleteConfirmation()"
+                        class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-full transition duration-200 mt-4"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        class="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full transition duration-200 mt-4"
+                    >
+                        Confirm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <table id="product_table"></table>
 
@@ -119,9 +151,7 @@
 <script>
     const csrf_token = "{{ csrf_token }}";
     async function getProducts() {
-        return fetch("{% url 'main:get_item_json' %}").then((res) =>
-            res.json()
-        );
+        return fetch("{% url 'main:get_item_json' %}").then((res) => res.json());
     }
 
     async function refreshProducts() {
@@ -136,7 +166,7 @@
                 <th class="p-2 text-white">Delete Product</th>
             </tr>`;
         products.forEach((item) => {
-            htmlString += `\n<tr>
+            htmlString += `\n<tr id="row_${item.pk}">
             <td class="p-2">${item.fields.name}</td>
             <td class="p-2 flex items-center justify-center">
                 <button onclick="decreaseAmount(${item.pk})" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded-l-full">-</button>
@@ -151,7 +181,7 @@
                 <a href="edit-item/${item.pk}/" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded-full">Edit</a>
             </td>
             <td class="p-2 text-center">
-                <a href="delete-item/${item.pk}/" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-2 rounded-full">Delete</a>
+                <button class="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-2 rounded-full" onclick="showDeleteConfirmation('${item.pk}', '${item.fields.name}')">Delete</button>
             </td>
         </tr>`;
         });
@@ -161,6 +191,7 @@
 
     refreshProducts();
 
+    // Fungsi untuk menambahkan amount item dengan AJAX
     async function increaseAmount(itemID) {
         const response = await fetch(`increase-amount/${itemID}/`, {
             method: "POST",
@@ -174,8 +205,7 @@
             const data = await response.json();
             if (data.success) {
                 const newAmount = data.new_amount;
-                document.getElementById(`amount-${itemID}`).textContent =
-                    newAmount;
+                document.getElementById(`amount-${itemID}`).textContent = newAmount;
             } else {
                 console.error(data.error_message);
             }
@@ -184,6 +214,7 @@
         }
     }
 
+    // Fungsi untuk mengurangi amount item dengan AJAX
     async function decreaseAmount(itemID) {
         const response = await fetch(`decrease-amount/${itemID}/`, {
             method: "POST",
@@ -197,14 +228,63 @@
             const data = await response.json();
             if (data.success) {
                 const newAmount = data.new_amount;
-                document.getElementById(`amount-${itemID}`).textContent =
-                    newAmount;
+                document.getElementById(`amount-${itemID}`).textContent = newAmount;
             } else {
                 console.error(data.error_message);
             }
         } else {
             console.error("Terjadi kesalahan saat mengirim permintaan.");
         }
+    }
+
+    // Fungsi untuk menampilkan popup konfirmasi
+    function showDeleteConfirmation(itemID, itemName) {
+        const deleteConfirmationText = document.getElementById("deleteConfirmationText");
+        deleteConfirmationText.innerText = `Are you sure you want to delete "${itemName}"?`;
+        const deleteConfirmation = document.getElementById("deleteConfirmation");
+        deleteConfirmation.style.display = "block";
+
+        const deleteItemForm = document.getElementById("deleteItemForm");
+        deleteItemForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // Mencegah pengiriman formulir default
+            deleteItem(itemID); // Memanggil deleteItem() dengan itemID
+        });
+
+    }
+
+    // Fungsi untuk menutup popup konfirmasi
+    function closeDeleteConfirmation() {
+        const deleteConfirmation = document.getElementById("deleteConfirmation");
+        deleteConfirmation.style.display = "none";
+    }
+
+    // Fungsi untuk menghapus item dengan AJAX
+    async function deleteItem(itemID) {
+        const response = await fetch(`delete-item/${itemID}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrf_token,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                // Hapus baris item dari tabel berdasarkan ID
+                const rowToDelete = document.getElementById(`row_${itemID}`);
+                if (rowToDelete) {
+                    rowToDelete.remove();
+                }
+            } else {
+                console.error("Gagal menghapus item.");
+            }
+        } else {
+            console.error("Terjadi kesalahan saat mengirim permintaan.");
+        }
+
+        // Tutup popup konfirmasi
+        closeDeleteConfirmation();
     }
 </script>
 
