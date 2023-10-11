@@ -92,6 +92,28 @@ def create_item_ajax(request):
 
     return HttpResponseNotFound()
 
+@csrf_exempt
+def edit_item_ajax(request, item_id):
+    if request.method == 'POST':
+        name = request.POST.get("nameEdit")
+        amount = request.POST.get("amountEdit")
+        description = request.POST.get("descriptionEdit")
+        price = request.POST.get("priceEdit")
+        user = request.user
+
+        # Item yang akan diubah
+        item = Item.objects.get(pk=item_id)
+        
+        item.name = name
+        item.amount = amount
+        item.description = description
+        item.price = price
+        item.save()
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"success": False}, status=400)
+
 @login_required(login_url='/login')
 def edit_item(request, item_id):
     item = Item.objects.get(pk=item_id)

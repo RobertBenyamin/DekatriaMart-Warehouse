@@ -68,7 +68,11 @@
 <div class="flex w-screen flex-col max-w-6xl mx-auto mt-8 px-4">
     <h1 class="text-3xl font-semibold mb-4">List of Products</h1>
 
-    <h4 class="text-xl font-semibold mb-4">
+    <h4
+        id="totalItem"
+        class="text-xl font-semibold mb-4"
+        data-count="{{ items.count }}"
+    >
         Kamu menyimpan {{items.count}} item pada aplikasi ini
     </h4>
 
@@ -163,6 +167,94 @@
     </div>
 
     <div
+        id="editItem"
+        class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 w-1/2"
+    >
+        <div class="bg-white p-8 rounded shadow-lg w-full">
+            <h1 class="text-2xl font-semibold text-center mb-6">Edit Item</h1>
+
+            <form id="editForm" onsubmit="return false;">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label
+                        for="name"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Name:</label
+                    >
+                    <input
+                        type="text"
+                        name="name"
+                        id="nameEdit"
+                        placeholder="Enter item name"
+                        class="form-input w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200 transition duration-200"
+                    />
+                </div>
+
+                <div class="mb-4">
+                    <label
+                        for="amount"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Amount:</label
+                    >
+                    <input
+                        type="text"
+                        name="amount"
+                        id="amountEdit"
+                        placeholder="Enter amount"
+                        class="form-input w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200 transition duration-200"
+                    />
+                </div>
+
+                <div class="mb-4">
+                    <label
+                        for="description"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Description:</label
+                    >
+                    <textarea
+                        name="description"
+                        id="descriptionEdit"
+                        placeholder="Enter item description"
+                        rows="4"
+                        class="form-textarea w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200 transition duration-200"
+                    ></textarea>
+                </div>
+
+                <div class="mb-6">
+                    <label
+                        for="price"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Price:</label
+                    >
+                    <input
+                        type="text"
+                        name="price"
+                        id="priceEdit"
+                        placeholder="Enter price"
+                        class="form-input w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200 transition duration-200"
+                    />
+                </div>
+
+                <div class="text-center">
+                    <button
+                        type="button"
+                        onclick="closePopUp('editItem')"
+                        class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-full transition duration-200 mt-4"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition duration-200"
+                    >
+                        Edit Item
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div
         id="deleteConfirmation"
         class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-100"
     >
@@ -209,6 +301,10 @@
 <script>
     const csrf_token = "{{ csrf_token }}";
 
+    var itemCount = document
+        .getElementById("totalItem")
+        .getAttribute("data-count");
+
     async function getProducts() {
         return fetch("{% url 'main:get_item_json' %}").then((res) =>
             res.json()
@@ -239,7 +335,7 @@
             <td class="p-2">${item.fields.description}</td>
             <td class="p-2 text-center">${item.fields.price}</td>
             <td class="p-2 text-center">
-                <a href="edit-item/${item.pk}/" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded-full">Edit</a>
+                <button onclick="showEditItem(${item.pk})" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded-full">Edit</button>
             </td>
             <td class="p-2 text-center">
                 <button class="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-2 rounded-full" onclick="showDeleteConfirmation('${item.pk}', '${item.fields.name}')">Delete</button>
@@ -252,16 +348,65 @@
 
     refreshProducts();
 
+    // Fungsi untuk menutup popup
+    function closePopUp(popupID) {
+        const popup = document.getElementById(popupID);
+        popup.style.display = "none";
+    }
+
+    // Fungsi untuk menampilkan popup add item
+    function showAddItem() {
+        const popupAddItem = document.getElementById("addItem");
+        popupAddItem.style.display = "block";
+    }
+
     // Fungsi untuk menambahkan item dengan AJAX
-    function addItem() {
+    async function addItem() {
         fetch("{% url 'main:create_ajax' %}", {
             method: "POST",
             body: new FormData(document.querySelector("#form")),
         }).then(refreshProducts);
 
+        // Update total item yang tersimpan
+        const totalItemElement = document.getElementById("totalItem");
+        totalItemElement.textContent = `Kamu menyimpan ${++itemCount} item pada aplikasi ini`;
         closePopUp("addItem");
         document.getElementById("form").reset();
         return false;
+    }
+
+    // Fungsi untuk menampilkan popup edit item
+    function showEditItem(itemID) {
+        const editItemPopup = document.getElementById("editItem");
+
+        // Isi nilai-nilai input sesuai dengan data item yang akan diedit
+        const item = document.getElementById(`row_${itemID}`);
+        document.getElementById("nameEdit").value = item.cells[0].textContent;
+        document.getElementById("amountEdit").value =
+            item.cells[1].querySelector("p").textContent;
+        document.getElementById("descriptionEdit").value =
+            item.cells[2].textContent;
+        document.getElementById("priceEdit").value = item.cells[3].textContent;
+
+        editItemPopup.style.display = "block";
+
+        // Mengatur event listener untuk tombol Edit Item pada popup
+        const editForm = document.getElementById("editForm");
+        editForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // Mencegah pengiriman formulir default
+            editItem(itemID); // Memanggil editItem() dengan itemID
+        });
+    }
+
+    // Fungsi untuk mengedit item dengan AJAX
+    async function editItem(itemID) {
+        fetch(`edit-item-ajax/${itemID}/`, {
+            method: "POST",
+            body: new FormData(document.querySelector("#editForm")),
+        }).then(refreshProducts);
+
+        closePopUp("editItem");
+        document.getElementById("editForm").reset();
     }
 
     // Fungsi untuk menambahkan amount item dengan AJAX
@@ -329,18 +474,6 @@
         });
     }
 
-    // Fungsi untuk menampilkan popup add item
-    function showAddItem() {
-        const popupAddItem = document.getElementById("addItem");
-        popupAddItem.style.display = "block";
-    }
-
-    // Fungsi untuk menutup popup
-    function closePopUp(popupID) {
-        const popup = document.getElementById(popupID);
-        popup.style.display = "none";
-    }
-
     // Fungsi untuk menghapus item dengan AJAX
     async function deleteItem(itemID) {
         const response = await fetch(`delete-item/${itemID}/`, {
@@ -359,6 +492,9 @@
                 if (rowToDelete) {
                     rowToDelete.remove();
                 }
+                // Update total item yang tersimpan
+                const totalItemElement = document.getElementById("totalItem");
+                totalItemElement.textContent = `Kamu menyimpan ${--itemCount} item pada aplikasi ini`;
             } else {
                 console.error("Gagal menghapus item.");
             }
