@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, HttpResponseNotFound
 from main.forms import ItemForm, UserRegisterForm
 from django.urls import reverse
 from main.models import Item
@@ -7,6 +7,7 @@ from django.core import serializers
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 import datetime
 
 @login_required(login_url='/login')
@@ -74,6 +75,22 @@ def create_item(request):
 
     context = {'form': form}
     return render(request, "create_item.html", context)
+
+@csrf_exempt
+def create_item_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        amount = request.POST.get("amount")
+        description = request.POST.get("description")
+        price = request.POST.get("price")
+        user = request.user
+
+        new_product = Item(name=name, amount=amount, description=description, price=price, user=user)
+        new_product.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
 
 @login_required(login_url='/login')
 def edit_item(request, item_id):
