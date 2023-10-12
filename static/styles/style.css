@@ -1,0 +1,6 @@
+#userMenuButton:hover + #userMenu,
+#userMenu:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0, 0);
+}
