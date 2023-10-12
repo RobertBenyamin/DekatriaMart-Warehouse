@@ -1,6 +1,6 @@
 ## DekatriaMart Warehouse
 
-Link Deployment: https://dekatriamart-warehouse.adaptable.app/
+Link Deployment: http://robert-benyamin-tugas.pbp.cs.ui.ac.id/
 
 <details>
 <summary>Tugas 2</summary>
@@ -531,6 +531,158 @@ https://blog.hubspot.com/website/css-margin-vs-padding
 Sumber: <br>
 https://codepolitan.com/blog/perbedaan-bootstrap-dan-tailwind <br>
 https://www.tutorialspoint.com/tailwind-css-vs-bootstrap
+</small>
+
+</details>
+
+<details>
+<summary>Tugas 6</summary>
+
+## Daftar Isi
+
+1. [Proses Pengerjaan Tugas](#proses-pengerjaan-tugas-4)
+2. [Perbedaan antara _Asynchronous Programming_ dengan _Synchronous Programming_](#perbedaan-antara-asynchronous-programming-dengan-synchronous-programming)
+3. [Paradigma _Event-Driven Programming_ pada JavaScript dan AJAX](#paradigma-event-driven-programming-pada-javascript-dan-ajax)
+4. [Penerapan _Asynchronous Programming_ pada AJAX](#penerapan-asynchronous-programming-pada-ajax)
+5. [Perbandingan antara Fetch API dengan jQuery](#perbandingan-antara-fetch-api-dengan-jquery)
+
+## Proses Pengerjaan Tugas
+
+1. Membuat fungsi `get_item_json` pada views.py
+2. Menambahkan _path url_ fungsi yang baru ditambahkan ke dalam `urlpatterns` pada `urls.py` yang ada pada direktori `main`
+3. Membuat fungsi `getProducts` dan `refreshProducts` bagian `<script></script>` pada `main.html` untuk menampilkan seluruh item secara asinkronus
+4. Memodifikasi fungsi `increase_amount` dan `decrease_amount` pada `views.py` agar dapat berfungsi secara asinkronus
+5. Membuat fungsi `increaseAmount` dan `decreaseAmount` pada bagian `<script></script>` pada `main.html` untuk menambah dan mengurangi `item amount` secara asinkronus
+6. Memodifikasi fungsi `delete_item` pada `views.py` agar dapat berfungsi secara asinkronus
+7. Membuat fungsi `showDeleteConfirmation` yang berfungsi untuk menampilkan popup konfirmasi hapus item, fungsi `deleteItem` yang berfungsi untuk menghapus item secara asinkronus, dan fungsi `closePopUp` yang berfungsi untuk menutup popup pada bagian `<script></script>` pada `main.html`
+8. Membuat fungsi `create_item_ajax` dan `edit_item_ajax` pada views.py
+9. Menambahkan _path url_ fungsi yang baru ditambahkan ke dalam `urlpatterns` pada `urls.py` yang ada pada direktori `main`
+10. Membuat fungsi `showAddItem` yang berfungsi untuk menampilkan popup form add item dan fungsi `addItem` yang berfungsi untuk menambahkan item secara asinkronus pada bagian `<script></script>` pada `main.html`
+11. Membuat fungsi `showEditItem` yang berfungsi untuk menampilkan popup form edit item dan fungsi `editItem` yang berfungsi untuk mengedit item secara asinkronus pada bagian `<script></script>` pada `main.html`
+12. Mengubah cara menampilkan list items dari tabel menjadi cards
+13. Memindahkan seluruh kode yang ada di dalam `<script></script>` pada `main.html` ke dalam file `script.js` yang ada pada direktori `static/js/`
+14. Menjalankan command `python manage.py collectstatic` untuk mengumpulkan semua file static ke satu tempat
+15. Melakukan *deployment* ke PaaS PBP Fasilkom UI
+
+## Perbedaan antara _Asynchronous Programming_ dengan _Synchronous Programming_
+
+|                        | Asynchronous Programming                                                                                              | Synchronous                                                                                                                      |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Eksekusi Tugas         | Tugas-tugas dieksekusi secara paralel, tanpa harus menunggu satu sama lain.                                           | Tugas-tugas dieksekusi satu per satu dalam urutan tertentu.                                                                      |
+| Blok Proses            | Eksekusi tugas lainnya tidak terhenti saat menunggu operasi I/O selesai.                                              | Eksekusi tugas terhenti selama menunggu operasi I/O.                                                                             |
+| Multitasking           | Cocok untuk skenario di mana banyak tugas berjalan secara bersamaan.                                                  | Tugas harus menunggu satu sama lain, kurang cocok untuk multitasking.                                                            |
+| Responsifitas Aplikasi | Aplikasi tetap responsif karena tugas yang memakan waktu lama tidak menghentikan tugas lainnya.                       | Aplikasi dapat menjadi tidak responsif jika ada tugas yang memakan waktu lama, karena semua tugas harus menunggu satu sama lain. |
+| Kompleksitas Kode      | Kode bisa lebih kompleks karena pengelolaan callback atau promise untuk mengatur tugas yang berjalan secara asinkron. | Kode cenderung lebih mudah dipahami karena urutan eksekusi yang jelas.                                                           |
+
+<small>
+Sumber: <br>
+https://www.mendix.com/blog/asynchronous-vs-synchronous-programming/ <br>
+https://www.trio.dev/blog/synchronous-and-asynchronous
+</small>
+
+## Paradigma _Event-Driven Programming_ pada JavaScript dan AJAX
+
+Paradigma _event-driven programming_ adalah suatu paradigma pemrograman dimana alur dari suatu program ditentukan oleh _event-event_ yang terjadi selama eksekusi program. Alih-alih berjalan secara linier, _event-driven program_ akan menunggu suatu events spesifik terjadi kemudian memanggil _event handler_ atau _callback_ yang sesuai untuk merespons event tersebut.
+
+Dalam _event-driven programming_, event dapat berupa berbagai jenis dari sinyal, tindakan, atau kejadian, seperti interaksi pengguna (misalnya klik tombol, gerakan mouse, penekanan key), event sistem (misalnya timer, input/output file, komunikasi jaringan), atau event khusus yang dibuat di dalam program.
+
+Salah satu contoh penerapan _event-driven programming_ pada tugas ini adalah sebagai berikut.
+
+```html
+<div id="addItem" class="hidden">...</div>
+
+<button onclick="showAddItem()">Add New Item</button>
+```
+
+```javascript
+function showAddItem() {
+    const popupAddItem = document.getElementById("addItem");
+    popupAddItem.style.display = "block";
+}
+```
+
+Ketika tombol `Add New Item` diklik, program akan menjalankan fungsi `showAddItem()`. Fungsi tersebut akan menampilkan popup `addItem` yang sebelumnya tersembunyi.
+
+<small>
+Sumber: <br>
+https://www.studysmarter.co.uk/explanations/computer-science/computer-programming/event-driven-programming/ <br>
+https://medium.com/@miladev95/event-driven-programming-cbd3ed8ec2ca
+</small>
+
+## Penerapan _Asynchronous Programming_ pada AJAX
+
+AJAX adalah singkatan dari Asynchronous JavaScript and XML. Penerapan asynchronous programming pada AJAX memungkinkan komunikasi antara browser dan server tanpa perlu me-_refresh_ seluruh halaman web. AJAX memungkinkan pengiriman HTTP Request (GET, POST, dll.) ke server secara asinkron, artinya permintaan dapat dikirim tanpa menghentikan eksekusi kode JavaScript atau menghentikan tampilan halaman web.
+
+Misalnya, saat pengguna mengklik tombol "Load Data" di halaman web, dengan asynchronous programming, JavaScript dapat mulai mengirim permintaan ke server untuk mengambil data tanpa harus menghentikan eksekusi kode lainnya. Ketika data tersedia, JavaScript akan mengaktifkan suatu fungsi (callback) untuk memproses data tersebut dan memperbarui tampilan halaman. Dalam pengembangan modern, asynchronous programming dalam AJAX juga dapat dilakukan dengan menggunakan Promises atau Async/Await.
+
+Dalam praktiknya, AJAX dapat menggunakan objek seperti XMLHttpRequest, _library_ jQuery, atau fetch API untuk mengirim dan menerima data secara asinkron dari server, sambil menjalankan kode lainnya. Dengan demikian, pengguna dapat memiliki pengalaman yang lebih mulus saat menggunakan aplikasi web.
+
+Contoh AJAX dengan Fetch API:
+
+```javascript
+async function logMovies() {
+    const response = await fetch("http://example.com/movies.json");
+    const movies = await response.json();
+    console.log(movies);
+}
+```
+
+<small>
+Sumber: <br>
+https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch <br>
+https://www.geeksforgeeks.org/what-is-an-asynchronous-request-in-ajax/ <br>
+https://www.dicoding.com/blog/mengenal-fungsi-asynchronous-request-pada-javascript/
+</small>
+
+## Perbandingan antara Fetch API dengan jQuery
+
+|                | Fetch API                                                                  | jQuery                                                                              |
+| -------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Implementasi   | Menggunakan JavaScript standar dan Promise.                                | Memerlukan library jQuery eksternal.                                                |
+| Ukuran Library | Kode lebih ringan karena tidak memerlukan library eksternal.               | Memerlukan library jQuery yang memiliki ukuran yang lebih besar.                    |
+| Modernitas     | Mendukung Promise, lebih sesuai dengan paradigma asynchronous programming. | Masih menggunakan callback pattern, yang kurang modern dibandingkan dengan Promise. |
+| Kompatibilitas | Tidak mendukung browser lama seperti Internet Explorer versi lama.         | Dirancang untuk mendukung berbagai browser termasuk yang lama.                      |
+| Penggunaan     | Dapat digunakan untuk aplikasi web modern.                                 | Cocok untuk proyek yang memerlukan kompatibilitas yang luas.                        |
+
+Contoh Fetch API:
+
+```javascript
+fetch("https://api.example.com/data")
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data);
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+    });
+```
+
+Contoh jQuery:
+
+```javascript
+$.ajax({
+    url: "https://api.example.com/data",
+    method: "GET",
+    dataType: "json",
+    success: function (data) {
+        console.log(data);
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+        console.error("Error:", errorThrown);
+    },
+});
+```
+
+Fetch API cocok digunakan jika kita ingin mengembangkan aplikasi web modern dengan fokus pada performa, ringan, dan memanfaatkan fitur terbaru JavaScript. Selain itu, Fetch API adalah pilihan yang lebih modern dan sesuai dengan perkembangan teknologi web saat ini.
+
+Namun, jika kita ingin mengembangkan aplikasi web yang mendukung browser lama atau memerlukan kompatibilitas yang luas, jQuery masih bisa menjadi pilihan yang valid. Selain itu, jika kita sudah memiliki pengalaman dengan jQuery atau proyek yang dikembangkan menggunakan _library_ ini, maka mempertahankannya bisa masuk akal.
+
+Akhirnya, pemilihan antara Fetch API dan jQuery sangat tergantung pada kebutuhan proyek dan preferensi kita sebagai pengembang. Yang terpenting adalah memahami kelebihan dan kelemahan masing-masing teknologi dan menggunakan yang sesuai dengan keperluan kita.
+
+<small>
+Sumber: <br>
+https://www.quora.com/Which-one-is-more-popular-jQuery-Ajax-or-JS-Fetch-Ajax <br>
+https://medium.com/@reemshakes/is-ajax-getting-replaced-by-fetch-api-55207234793f
 </small>
 
 </details>

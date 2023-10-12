@@ -22,7 +22,6 @@ def home(request):
 
     return render(request, "main.html", context)
 
-@login_required(login_url='/login')
 def register(request):
     form = UserRegisterForm()
 
@@ -127,7 +126,6 @@ def edit_item(request, item_id):
     context = {'form': form}
     return render(request, "edit_item.html", context)
 
-@login_required(login_url='/login')
 def delete_item(request, item_id):
     item = Item.objects.get(pk=item_id)
 
