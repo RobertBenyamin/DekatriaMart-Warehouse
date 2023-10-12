@@ -237,14 +237,13 @@
 
                 <div class="text-center">
                     <button
-                        type="button"
-                        onclick="closePopUp('editItem')"
+                        id="editClose"
                         class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-full transition duration-200 mt-4"
                     >
                         Cancel
                     </button>
                     <button
-                        type="submit"
+                        id="editButton"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition duration-200"
                     >
                         Edit Item
@@ -269,14 +268,13 @@
 
                 <div class="text-center">
                     <button
-                        type="button"
-                        onclick="closePopUp('deleteConfirmation')"
+                        id="deleteClose"
                         class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-full transition duration-200 mt-4"
                     >
                         Cancel
                     </button>
                     <button
-                        type="submit"
+                        id="deleteButton"
                         class="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full transition duration-200 mt-4"
                     >
                         Confirm
@@ -377,6 +375,7 @@
 
     // Fungsi untuk menampilkan popup edit item
     function showEditItem(itemID) {
+        console.log("popup edit item: " + itemID);
         const editItemPopup = document.getElementById("editItem");
 
         // Isi nilai-nilai input sesuai dengan data item yang akan diedit
@@ -390,16 +389,36 @@
 
         editItemPopup.style.display = "block";
 
-        // Mengatur event listener untuk tombol Edit Item pada popup
-        const editForm = document.getElementById("editForm");
-        editForm.addEventListener("submit", function (event) {
-            event.preventDefault(); // Mencegah pengiriman formulir default
-            editItem(itemID); // Memanggil editItem() dengan itemID
-        });
+        // Variabel untuk event listener
+        const editButton = document.getElementById("editButton");
+        const cancelButton = document.getElementById("editClose");
+
+        // Define a function for editItem
+        function editItemHandler() {
+            editItem(itemID);
+
+            // Menghapus event listener ketika selesai
+            editButton.removeEventListener("click", editItemHandler);
+            cancelButton.removeEventListener("click", cancelEditItem);
+        }
+
+        // Define a function for cancelEditItem
+        function cancelEditItem() {
+            closePopUp("editItem");
+
+            // Menghapus event listener ketika selesai
+            editButton.removeEventListener("click", editItemHandler);
+            cancelButton.removeEventListener("click", cancelEditItem);
+        }
+
+        // Tambahkan event listener pada tombol "Edit Item" dan "Cancel"
+        editButton.addEventListener("click", editItemHandler);
+        cancelButton.addEventListener("click", cancelEditItem);
     }
 
     // Fungsi untuk mengedit item dengan AJAX
     async function editItem(itemID) {
+        console.log("edit item: " + itemID);
         fetch(`edit-item-ajax/${itemID}/`, {
             method: "POST",
             body: new FormData(document.querySelector("#editForm")),
@@ -467,11 +486,32 @@
             document.getElementById("deleteConfirmation");
         deleteConfirmation.style.display = "block";
 
-        const deleteItemForm = document.getElementById("deleteItemForm");
-        deleteItemForm.addEventListener("submit", function (event) {
-            event.preventDefault(); // Mencegah pengiriman formulir default
-            deleteItem(itemID); // Memanggil deleteItem() dengan itemID
-        });
+        // Variabel untuk event listener
+        const deleteButton = document.getElementById("deleteButton");
+        const cancelButton = document.getElementById("deleteClose");
+        
+        // Define a function for deleteItem
+        function deleteItemHandler() {
+            deleteItem(itemID);
+
+            // Menghapus event listener ketika selesai
+            deleteButton.removeEventListener("click", deleteItemHandler);
+            cancelButton.removeEventListener("click", cancelDeleteItem);
+        }
+
+        // Define a function for cancelDeleteItem
+        function cancelDeleteItem() {
+            closePopUp('deleteConfirmation')
+
+            // Menghapus event listener ketika selesai
+            deleteButton.removeEventListener("click", deleteItemHandler);
+            cancelButton.removeEventListener("click", cancelDeleteItem);
+        }
+
+        // Tambahkan event listener pada tombol "Delete Item" dan "Cancel"
+        deleteButton.addEventListener("click", deleteItemHandler);
+        cancelButton.addEventListener("click", cancelDeleteItem);
+
     }
 
     // Fungsi untuk menghapus item dengan AJAX
