@@ -131,7 +131,7 @@ def edit_item(request, item_id):
 def delete_item(request, item_id):
     item = Item.objects.get(pk=item_id)
 
-    if request.method == 'POST':
+    if request.method == 'DELETE':
         item.delete()
         return JsonResponse({'success': True,})
 

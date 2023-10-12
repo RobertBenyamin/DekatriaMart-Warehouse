@@ -221,7 +221,7 @@ function showDeleteConfirmation(itemID, itemName) {
 // Fungsi untuk menghapus item dengan AJAX
 async function deleteItem(itemID) {
     const response = await fetch(`delete-item/${itemID}/`, {
-        method: "POST",
+        method: "DELETE",
         headers: {
             "X-CSRFToken": csrf_token,
             "Content-Type": "application/json",
