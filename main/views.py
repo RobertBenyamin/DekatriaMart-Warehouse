@@ -17,7 +17,7 @@ def home(request):
     context = {
         'user': request.user,
         'items': items,
-        'last_login': request.COOKIES['last_login'],
+        'last_login': request.COOKIES['last_login'][:-7],
     }
 
     return render(request, "main.html", context)
