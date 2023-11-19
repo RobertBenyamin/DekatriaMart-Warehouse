@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, HttpResponseNotFound
 from main.forms import ItemForm, UserRegisterForm
@@ -54,10 +55,6 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
-
-def get_item_json(request):
-    items = Item.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize('json', items))
 
 @login_required(login_url='/login')
 def create_item(request):
@@ -145,6 +142,30 @@ def decrease_amount(request, item_id):
         item.amount -= 1
         item.save()
     return JsonResponse({'success': True, 'new_amount': item.amount})
+
+@csrf_exempt
+def create_item_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_item = Item.objects.create(
+            user = request.user,
+            name = data["name"],
+            amount = int(data["amount"]),
+            description = data["description"],
+            price = int(data["price"]),
+        )
+
+        new_item.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+
+def get_item_json(request):
+    items = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', items))
 
 def show_xml(request):
     data = Item.objects.all()

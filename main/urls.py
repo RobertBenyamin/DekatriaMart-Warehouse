@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from main.views import home, show_xml, show_json, show_xml_by_id, show_json_by_id 
 from main.views import register, login_user, logout_user, increase_amount, decrease_amount
-from main.views import create_item, edit_item, delete_item, get_item_json, create_item_ajax
+from main.views import create_item, edit_item, delete_item, get_item_json, create_item_ajax, create_item_flutter
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -24,6 +24,8 @@ urlpatterns = [
 
     path('increase-amount/<int:item_id>/', increase_amount, name='increase_amount'),
     path('decrease-amount/<int:item_id>/', decrease_amount, name='decrease_amount'),
+
+    path('create-flutter/', create_item_flutter, name='create_item_flutter'),
 
     path('xml/', show_xml, name='show_xml'), 
     path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id'),
