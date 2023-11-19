@@ -1,8 +1,6 @@
 const csrf_token = document.body.getAttribute("data-csrf-token");
 
-document.addEventListener("DOMContentLoaded", function() {
-    var itemCount = document.getElementById("totalItem").getAttribute("data-count");
-});
+var itemCount = document.getElementById("totalItem").getAttribute("data-count");
 
 async function getProducts() {
     return fetch(`get-item/`).then((res) => res.json());
