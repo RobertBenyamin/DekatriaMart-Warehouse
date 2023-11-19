@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import datetime
 
+@csrf_exempt
 @login_required(login_url='/login')
 def home(request):
     items = Item.objects.filter(user=request.user)
@@ -23,6 +24,7 @@ def home(request):
 
     return render(request, "main.html", context)
 
+@csrf_exempt
 def register(request):
     form = UserRegisterForm()
 
@@ -35,6 +37,7 @@ def register(request):
     context = {'form':form}
     return render(request, 'register.html', context)
 
+@csrf_exempt
 def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -50,6 +53,7 @@ def login_user(request):
     context = {}
     return render(request, 'login.html', context)
 
+@csrf_exempt
 def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse('main:login'))
@@ -123,6 +127,7 @@ def edit_item(request, item_id):
     context = {'form': form}
     return render(request, "edit_item.html", context)
 
+@csrf_exempt
 def delete_item(request, item_id):
     item = Item.objects.get(pk=item_id)
 
@@ -130,12 +135,14 @@ def delete_item(request, item_id):
         item.delete()
         return JsonResponse({'success': True,})
 
+@csrf_exempt
 def increase_amount(request, item_id):
     item = Item.objects.get(pk=item_id)
     item.amount += 1
     item.save()
     return JsonResponse({'success': True, 'new_amount': item.amount})
 
+@csrf_exempt
 def decrease_amount(request, item_id):
     item = Item.objects.get(pk=item_id)
     if item.amount > 0:
@@ -163,6 +170,7 @@ def create_item_flutter(request):
     else:
         return JsonResponse({"status": "error"}, status=401)
 
+@csrf_exempt
 def get_item_json(request):
     items = Item.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', items))
